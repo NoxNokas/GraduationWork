@@ -3,14 +3,15 @@
 
 #include <QDialog>
 #include <QCoreApplication>
-#include <QMessageBox>
-#include <QSerialPortInfo>
-#include <QtSerialPort/QSerialPort>
+
+
+
 #include <QFile>
 #include <QTime>
 #include "qcustomplot.h"
 #include <QString>
 #include <QChar>
+#include "menu.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,14 +28,15 @@ public:
 	void isPackage(); //if true then good package
 
 private slots:
-	void on_pushButton_clicked();
-	void on_pushButton_2_clicked();
 	void serialRecieve();	//getting data
 	void drawPlot();
 
+	void on_menuButton_clicked();
+
 private:
 	Ui::MainWindow *ui;
-	QSerialPort *serialPort;
+	Menu *menu;
+
 	QString data;
 	QStringList list;
 	QVector <QVector <double> > dataForPlot;

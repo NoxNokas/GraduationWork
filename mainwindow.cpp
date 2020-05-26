@@ -10,28 +10,17 @@ MainWindow::MainWindow(QWidget *parent)
 {
 	ui->setupUi(this);
 
-	serialPort = new QSerialPort(this);
+	menu = new Menu(this);
+
 	data.clear();
 
-	foreach (const QSerialPortInfo &serialPortInfo, QSerialPortInfo::availablePorts())
-		{
-			ui->cmbPort->addItem(serialPortInfo.portName());
-		}
-
-	serialPort->setPortName(this->ui->cmbPort->currentText());
-	serialPort->setBaudRate(QSerialPort::Baud115200);
-	if (!serialPort->open(QIODevice::ReadWrite)) {
-			//если подключится не получится то покажем сообщение с ошибкой
-			QMessageBox::warning(this, "Ошибка", "Не удалось подключится к порту");
-			return;
-		}
+	connect(menu->sPort(), &QIODevice::readyRead, this, &MainWindow::serialRecieve);
 
 	file.setFileName("myfile.txt");
 	if (!file.open(QIODevice::ReadWrite))
 	{
 		QMessageBox::warning(this, "Ошибка", "Не удалось открыть файл");
 	}
-	connect(serialPort, &QIODevice::readyRead, this, &MainWindow::serialRecieve);
 
 
 ////////////for plot///////////////////////////
@@ -48,8 +37,8 @@ MainWindow::~MainWindow()
 	delete ui;
 
 	//Закрываем порт
-	serialPort->close();
-	delete serialPort;
+	menu->sPort()->close();
+	delete menu->sPort();
 	file.close();
 }
 
@@ -60,7 +49,7 @@ void MainWindow::isPackage()
 {
 	QStringList l_trashList;
 	list.clear();
-	data += serialPort->readAll();
+	data += menu->sPort()->readAll();
 	data = data.trimmed();
 	l_trashList = data.split('\n');
 	//from l_trashList in l_goodList
@@ -68,7 +57,7 @@ void MainWindow::isPackage()
 	{
 		l_trashList[i] = l_trashList[i].trimmed();
 		if (l_trashList[i].startsWith('*') && l_trashList[i].endsWith('#')
-				&& l_trashList[i].count(';') + 1 == ui->numberMeasurement->value())
+				&& l_trashList[i].count(';') + 1 == menu->numberMeasurement())
 		{
 			l_trashList[i] = l_trashList[i]
 					.remove(QChar('*'), Qt::CaseInsensitive)
@@ -106,15 +95,15 @@ void MainWindow::serialRecieve()
 
 void MainWindow::drawPlot(){
 	QStringList l_list;
-	dataForPlot.resize(ui->numberMeasurement->value());
-	for(int i = 0; i < ui->numberMeasurement->value(); i++)
+	dataForPlot.resize(menu->numberMeasurement());
+	for(int i = 0; i < menu->numberMeasurement(); i++)
 	{
 		dataForPlot[i].resize(list.size());
 	}
 	for(int i = 0; i < list.size(); i++)
 	{
 		l_list = list[i].trimmed().split(';');
-		for(int j = 0; j < ui->numberMeasurement->value(); j++)
+		for(int j = 0; j < menu->numberMeasurement(); j++)
 		{
 			dataForPlot[j][i] = l_list[j].toDouble();
 		}
@@ -148,14 +137,11 @@ void MainWindow::delay( int millisecondsToWait )
 
 
 
-//initialize
-void MainWindow::on_pushButton_clicked()
-{
-	serialPort->write("i");
-}
 
-//move rocking
-void MainWindow::on_pushButton_2_clicked()
+
+void MainWindow::on_menuButton_clicked()
 {
-	serialPort->write("m");
+	//hide();
+	menu->show();
+	menu->exec();
 }

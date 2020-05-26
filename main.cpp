@@ -1,12 +1,12 @@
 #include "mainwindow.h"
-
+#include "menu.h"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
 	QApplication a(argc, argv);
 	MainWindow w;
-	//w.show();
-	w.showMaximized();
+	w.show();
+	//w.showMaximized();
 	return a.exec();
 }
