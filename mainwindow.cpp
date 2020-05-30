@@ -14,32 +14,29 @@ MainWindow::MainWindow(QWidget *parent)
 
 	data.clear();
 
-	connect(menu->sPort(), &QIODevice::readyRead, this, &MainWindow::serialRecieve);
+	connect(menu->getSerialPort(), &QIODevice::readyRead, this, &MainWindow::serialRecieve);
 
-	file.setFileName("myfile.txt");
-	if (!file.open(QIODevice::ReadWrite))
-	{
-		QMessageBox::warning(this, "Ошибка", "Не удалось открыть файл");
-	}
+
 
 
 ////////////for plot///////////////////////////
 
 	//ui->customPlot->setInteraction(QCP::iRangeZoom,true);   // Включаем взаимодействие удаления/приближения
 	//ui->customPlot->setInteraction(QCP::iRangeDrag, true);  // Включаем взаимодействие перетаскивания графика
-	plotTimer = new QTimer(this); //создание экземпляра таймера
+	//plotTimer = new QTimer(this); //создание экземпляра таймера
 	//connect(plotTimer, &QTimer::timeout, this, &MainWindow::drawPlot); //привязка события к функции PlaybackStep()
 	//plotTimer->start(2000);
 }
 
 MainWindow::~MainWindow()
 {
+	//Закрываем порт
+	menu->getSerialPort()->close();
+
+	delete menu->getSerialPort();
+
 	delete ui;
 
-	//Закрываем порт
-	menu->sPort()->close();
-	delete menu->sPort();
-	file.close();
 }
 
 
@@ -49,7 +46,7 @@ void MainWindow::isPackage()
 {
 	QStringList l_trashList;
 	list.clear();
-	data += menu->sPort()->readAll();
+	data += menu->getSerialPort()->readAll();
 	data = data.trimmed();
 	l_trashList = data.split('\n');
 	//from l_trashList in l_goodList
@@ -85,8 +82,8 @@ void MainWindow::serialRecieve()
 	for(int i = 0; i < list.size(); i++)
 	{
 		ui->txtOutput->append(list[i]);
-		file.write(list[i].toUtf8());
-		file.write(QByteArray("\n"));
+		menu->getFile()->write(list[i].toUtf8());
+		menu->getFile()->write(QByteArray("\n"));
 	}
 	drawPlot();
 }
@@ -115,8 +112,7 @@ void MainWindow::drawPlot(){
 			ui->customPlot->addGraph();		//Добавляем один график в Graph
 			//Говорим, что отрисовать нужно график по нашим двум массивам x и y
 			ui->customPlot->graph(i-1)->setData(dataForPlot[0], dataForPlot[i]);
-			//ui->customPlot->graph(i-1)->setPen(QColor(QRgb(i)));		//Цвет линии
-			ui->customPlot->graph(i-1)->setPen(QColor(Qt::GlobalColor(i+5)));		//Цвет линии
+			ui->customPlot->graph(i-1)->setPen(QColor(Qt::GlobalColor(i+6)));		//Цвет линии
 		}
 		ui->customPlot->xAxis->setRange(dataForPlot.first().first(),dataForPlot.first().last());
 		ui->customPlot->yAxis->setRange(-90,90);

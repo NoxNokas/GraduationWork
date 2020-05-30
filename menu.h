@@ -4,6 +4,8 @@
 #include <QDialog>
 #include <QSerialPortInfo>
 #include <QtSerialPort/QSerialPort>
+#include <QDir>
+#include <QDateTime>
 #include <QMessageBox>
 namespace Ui {
 class Menu;
@@ -19,7 +21,8 @@ public:
 	QString portName();
 	int numberMeasurement();
 	qint32 baudRate();
-	QSerialPort* sPort() { return serialPort; }
+	QSerialPort* getSerialPort() { return serialPort; }
+	QFile* getFile() { return file; }
 
 private slots:
 	void on_acceptButton_clicked();
@@ -28,6 +31,9 @@ private slots:
 private:
 	Ui::Menu *ui;
 	QSerialPort *serialPort;
+	QDir dir;
+	QString dirName;
+	QFile* file;
 };
 
 #endif // MENU_H

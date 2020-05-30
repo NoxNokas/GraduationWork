@@ -36,12 +36,9 @@ private slots:
 private:
 	Ui::MainWindow *ui;
 	Menu *menu;
-
 	QString data;
 	QStringList list;
 	QVector <QVector <double> > dataForPlot;
-	QFile file;
-	QTimer* plotTimer;
 	const int maxState = 500;
 };
 #endif // MAINWINDOW_H

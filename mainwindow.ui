@@ -31,45 +31,47 @@
   <property name="modal">
    <bool>false</bool>
   </property>
-  <widget class="QCustomPlot" name="customPlot" native="true">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>10</y>
-     <width>791</width>
-     <height>231</height>
-    </rect>
-   </property>
-   <property name="tabletTracking">
-    <bool>false</bool>
-   </property>
-   <property name="autoFillBackground">
-    <bool>false</bool>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="txtOutput">
-   <property name="geometry">
-    <rect>
-     <x>90</x>
-     <y>250</y>
-     <width>791</width>
-     <height>171</height>
-    </rect>
-   </property>
-  </widget>
-  <widget class="QPushButton" name="menuButton">
-   <property name="geometry">
-    <rect>
-     <x>0</x>
-     <y>10</y>
-     <width>80</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>Menu</string>
-   </property>
-  </widget>
+  <layout class="QGridLayout" name="gridLayout">
+   <item row="0" column="0">
+    <widget class="QPushButton" name="menuButton">
+     <property name="minimumSize">
+      <size>
+       <width>80</width>
+       <height>61</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Menu</string>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="1">
+    <widget class="QCustomPlot" name="customPlot" native="true">
+     <property name="minimumSize">
+      <size>
+       <width>791</width>
+       <height>231</height>
+      </size>
+     </property>
+     <property name="tabletTracking">
+      <bool>false</bool>
+     </property>
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+   <item row="1" column="1">
+    <widget class="QTextEdit" name="txtOutput">
+     <property name="minimumSize">
+      <size>
+       <width>791</width>
+       <height>171</height>
+      </size>
+     </property>
+    </widget>
+   </item>
+  </layout>
  </widget>
  <customwidgets>
   <customwidget>
