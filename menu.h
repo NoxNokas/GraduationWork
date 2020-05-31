@@ -26,7 +26,6 @@ public:
 
 private slots:
 	void on_acceptButton_clicked();
-	void on_refreshButton_clicked();
 
 private:
 	Ui::Menu *ui;

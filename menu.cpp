@@ -7,6 +7,7 @@ Menu::Menu(QWidget *parent) :
 {
 	ui->setupUi(this);
 
+	this->setWindowFlags(Qt::Dialog | Qt::WindowSystemMenuHint | Qt::WindowCloseButtonHint);
 	serialPort = new QSerialPort(this);
 	file = new QFile(this);
 
@@ -15,6 +16,7 @@ Menu::Menu(QWidget *parent) :
 		{
 			ui->cmbPort->addItem(serialPortInfo.portName());
 		}
+
 	//Заполняем комбо-бокс стандартным баудрейтом
 	foreach (const qint32 &serialPortInfo, QSerialPortInfo::standardBaudRates())
 		{
@@ -25,9 +27,10 @@ Menu::Menu(QWidget *parent) :
 
 	//Создание и проверка созданной директории
 	dirName = QDir::homePath() + "/documents/DiplomDir";
-	if (dir.mkdir(dirName))
+	dir.mkdir(dirName);
+	if (!dir.exists())
 	{
-		QMessageBox::information(this, "Успех", "Директория создана"+ dirName);
+		QMessageBox::information(this, "Ошибка", "Ошибка создания директории: "+ dirName);
 	}
 	QDir::setCurrent(dirName);
 
@@ -45,13 +48,27 @@ Menu::Menu(QWidget *parent) :
 	}
 	else
 	{
-		QMessageBox::warning(this, "Ошибка создания", "Не удалось создать текстовый файл для записи данных.");
+		QMessageBox::warning(this, "Ошибка", "Не удалось создать текстовый файл для записи данных.");
 	}
 }
 
 Menu::~Menu()
 {
-	file->close();
+	//Закрываем порт
+	serialPort->close();
+
+	//Закрываем файл, и если файл пустой, то удаляем его
+	if(file->size() == 0)
+	{
+		file->remove();
+	} else
+	{
+		file->close();
+	}
+
+	//Освобождаем память
+	delete serialPort;
+	delete file;
 	delete ui;
 }
 
@@ -72,18 +89,13 @@ qint32 Menu::baudRate()
 
 void Menu::on_acceptButton_clicked()
 {
+	serialPort->setPortName(portName());
+	serialPort->setBaudRate(baudRate());
+	serialPort->open(QIODevice::ReadWrite);
 	if (!serialPort)
 	{
 		QMessageBox::warning(this, "Error", serialPort->errorString());
 		return;
 	}
-	serialPort->setPortName(portName());
-	serialPort->setBaudRate(baudRate());
-	serialPort->open(QIODevice::ReadWrite);
-	hide();
-}
-
-void Menu::on_refreshButton_clicked()
-{
 	hide();
 }

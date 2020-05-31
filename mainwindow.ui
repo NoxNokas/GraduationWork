@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>889</width>
+    <width>895</width>
     <height>437</height>
    </rect>
   </property>
@@ -26,25 +26,12 @@
    <string/>
   </property>
   <property name="sizeGripEnabled">
-   <bool>false</bool>
+   <bool>true</bool>
   </property>
   <property name="modal">
    <bool>false</bool>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="0" column="0">
-    <widget class="QPushButton" name="menuButton">
-     <property name="minimumSize">
-      <size>
-       <width>80</width>
-       <height>61</height>
-      </size>
-     </property>
-     <property name="text">
-      <string>Menu</string>
-     </property>
-    </widget>
-   </item>
    <item row="0" column="1">
     <widget class="QCustomPlot" name="customPlot" native="true">
      <property name="minimumSize">
@@ -68,6 +55,19 @@
        <width>791</width>
        <height>171</height>
       </size>
+     </property>
+    </widget>
+   </item>
+   <item row="0" column="0">
+    <widget class="QPushButton" name="menuButton">
+     <property name="minimumSize">
+      <size>
+       <width>80</width>
+       <height>61</height>
+      </size>
+     </property>
+     <property name="text">
+      <string>Menu</string>
      </property>
     </widget>
    </item>

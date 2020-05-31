@@ -9,11 +9,12 @@ MainWindow::MainWindow(QWidget *parent)
 	, ui(new Ui::MainWindow)
 {
 	ui->setupUi(this);
-
+	this->setWindowFlags(Qt::WindowSystemMenuHint | Qt::WindowMinMaxButtonsHint | Qt::WindowCloseButtonHint);
 	menu = new Menu(this);
 
 	data.clear();
 
+	//Этот connect вместо loop
 	connect(menu->getSerialPort(), &QIODevice::readyRead, this, &MainWindow::serialRecieve);
 
 
@@ -30,11 +31,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-	//Закрываем порт
-	menu->getSerialPort()->close();
-
-	delete menu->getSerialPort();
-
 	delete ui;
 
 }
@@ -110,7 +106,7 @@ void MainWindow::drawPlot(){
 		ui->customPlot->clearGraphs();
 		for (int i = 1; i < dataForPlot.size(); i++){
 			ui->customPlot->addGraph();		//Добавляем один график в Graph
-			//Говорим, что отрисовать нужно график по нашим двум массивам x и y
+			//Говорим, что отрисовать нужно график по нашим двум массивам
 			ui->customPlot->graph(i-1)->setData(dataForPlot[0], dataForPlot[i]);
 			ui->customPlot->graph(i-1)->setPen(QColor(Qt::GlobalColor(i+6)));		//Цвет линии
 		}
@@ -138,6 +134,5 @@ void MainWindow::delay( int millisecondsToWait )
 void MainWindow::on_menuButton_clicked()
 {
 	//hide();
-	menu->show();
 	menu->exec();
 }
